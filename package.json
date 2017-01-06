@@ -1,0 +1,12 @@
+{
+  "name": "fv-homepage",
+  "version": "0.1",
+  "description": "The homepage for FreeVerse.io",
+  "author": {
+    "name": "Patrick Dobson",
+    "url": "downpatproductions.com"
+  },
+  "engines": {
+    "node": "6.9.3"
+  }
+}
