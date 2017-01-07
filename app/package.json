@@ -10,7 +10,9 @@
     "node": "6.9.4"
   },
   "scripts": {
-    "test": "tape tests/*.js"
+    "unit-test": "tape tests/unit/*.js",
+    "int-test": "tape tests/integration/*.js",
+    "func-test": "tape tests/functional/*.js"
   },
   "devDependencies": {
     "tape": "4.6.3"

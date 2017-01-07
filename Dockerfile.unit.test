@@ -5,4 +5,4 @@ ADD app /app
 WORKDIR /app
 RUN npm install
 
-RUN npm test
+RUN npm unit-test
