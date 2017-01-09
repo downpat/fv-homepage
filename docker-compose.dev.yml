@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  homepage:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes: ["./app:/user/share/nginx/html"]
+    ports: ["80:80"]
