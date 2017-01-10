@@ -1,6 +1,6 @@
 FROM node:6.9.4
 
-ADD app /app
+ADD pkg /app
 
 WORKDIR /app
 RUN npm install

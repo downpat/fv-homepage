@@ -12,9 +12,13 @@
   "scripts": {
     "unit-test": "tape tests/unit/*.js",
     "int-test": "tape tests/integration/*.js",
-    "func-test": "tape tests/functional/*.js"
+    "func-test": "tape tests/functional/*.js",
+    "compile-sass": "node compile-sass.js ./sass/*.scss"
   },
   "devDependencies": {
-    "tape": "4.6.3"
+    "tape": "4.6.3",
+    "browserify": "13.3.0",
+    "bootstrap": "4.0.0-alpha.6",
+    "node-sass": "4.2.0"
   }
 }

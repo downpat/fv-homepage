@@ -6,7 +6,14 @@ The FreeVerse homepage will be deployed via CDN, so no server-side code is neces
 local development, this repo maintains an nginx docker image that can be deployed with docker-compose:
 
 ```
-sudo docker-compose -f ./docker-compose.dev.yml up
+sudo docker-compose -f ./app/docker-compose.dev.yml up
+```
+
+Depending on your dev environment, you may need to re-build and relaunch after making changes.
+
+```
+sudo docker-compose -f ./app/docker-compose.dev.yml build
+sudo docker-compose -f ./app/docker-compose.dev.yml up
 ```
 
 ## Testing
@@ -15,11 +22,11 @@ Similarly, unit, integration, and functional tests can be run with docker-compos
 For unit testing:
 
 ```
-docker-compose -f ./docker-compose.unit.yml -p ci build
+docker-compose -f ./app/docker-compose.unit.yml build
 ```
 
 For unit, integration, and functional testing:
 
 ```
-docker-compose -f ./docker-compose.full.yml -p ci build
+docker-compose -f ./app/docker-compose.full.yml build
 ```
