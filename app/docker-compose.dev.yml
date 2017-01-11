@@ -5,4 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
+    volumes: [
+      "./pkg/static:/usr/share/nginx/html",
+      "./pkg/js:/app/js"
+    ]
     ports: ["80:80"]

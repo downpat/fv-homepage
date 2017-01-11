@@ -1,12 +1,23 @@
-FROM node:6.9.4
+FROM nginx:1.11.8
+
+WORKDIR /opt
+
+RUN apt-get update
+RUN apt-get install -y curl
+
+RUN curl -sL http://deb.nodesource.com/setup_6.x | bash -
+RUN apt-get update
+RUN apt-get install -y nodejs
+
+COPY conf/dev/nginx.conf /etc/nginx/nginx.com
+COPY conf/dev/default.conf /etc/nginx/conf.d/default.conf
+COPY pkg/static /usr/share/nginx/html
 
 ADD pkg /app
 WORKDIR /app
 
-RUN npm install http-server -g
 RUN npm install
+RUN npm install -g watchify
 
-RUN npm run compile-sass ./sass/*.scss
+#RUN npm run compile-sass ./sass/*.scss
 
-RUN ls
-RUN http-server static -p 80
