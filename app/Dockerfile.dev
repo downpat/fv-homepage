@@ -17,7 +17,6 @@ ADD pkg /app
 WORKDIR /app
 
 RUN npm install
-RUN npm install -g watchify
 
 #RUN npm run compile-sass ./sass/*.scss
 
