@@ -1,34 +1,8 @@
-/**
- * So, yeah, this needs cleaned up a bit. I'll get to it! Promise!
- *
- */
-
-$(document).ready(function () {
-/**
- * UserVoice setup
- */
-UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/zggE5fvmKBXzFII7z1fo8A.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
-
-  /**
-   * Email form
-   */
-  $("#email-form").submit(function (event) {
-    event.preventDefault();
-    var uvEmail = $("#fv-email").val();
-    var uvName = uvEmail.substring(0, uvEmail.indexOf('@'));
-    console.log("Sending name:"+uvName);
-    console.log("Sending email:"+uvEmail);
-    UserVoice.push(['identify', {
-      email: uvEmail,
-      name: uvName,
-      created_at: new Date().getTime()
-    }]);
-  });
-
-  /**
-	 * Custom video background cycle
-   */
-  var nextVid = 2;
+(function( fv, $, undefined ) {
+  //Video properties (private)
+  var activeVideo = undefined;
+  var hiddenVideo = undefined;
+  var nextVid = 1;
   var bktUrl = "https://s3.us-east-2.amazonaws.com/freeverse-videos/";
 	var vidSrcs = [
 		bktUrl+"woman-shelf-video-call2.mp4",
@@ -45,29 +19,62 @@ UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script
 		bktUrl+"rock-sea-call.mp4",
 	];
 
-  $('#video1').on("ended", function (eo) {
-		$(this)
-			.addClass('hidden')
-			.attr('src', vidSrcs[nextVid]);
-		$('#video2')
-			.removeClass('hidden')
-			.get(0)
-			.play();
-		nextVid = nextVid == 11 ? 0 : nextVid + 1;
-  });
-  $('#video2').on("ended", function (eo) {
-		$(this)
-			.addClass('hidden')
-			.attr('src', vidSrcs[nextVid]);
-		$('#video1')
-			.removeClass('hidden')
-			.get(0)
-			.play();
-		nextVid = nextVid == 11 ? 0 : nextVid + 1;
-  });
-  $('.fv-video').on("canplay", function (eo) {
-		if($(this).hasClass('hidden')) {
-			this.pause();
-		}
-  });
-});
+  //Video Method (private)
+
+  /**
+   * nextVideo
+   * returns a string for the URL of the next video to play.
+  **/
+  function nextVideo() {
+    nextVid = nextVid >= vidSrcs.length ? 0 : nextVid + 1;
+    return vidSrcs[nextVid];
+  }
+  /**
+   * swapOnEnded
+   * swaps the visible video with the hidden one when
+   * the visible video ends.
+   *
+  **/
+  function swapOnEnded() {
+    activeVideo
+      .addClass('hidden')
+      .attr('src', nextVideo());
+    hiddenVideo
+      .removeClass('hidden')
+      .get(0)
+      .play();
+    var temp = activeVideo;
+    activeVideo = hiddenVideo;
+    hiddenVideo = temp;
+  }
+
+  /**
+   * pauseHidden
+   * checks if a video is hidden and pauses it if it is
+  **/
+  function pauseHidden(eventObj) {
+    var vid = eventObj.target;
+    
+    if($(vid).hasClass('hidden')) {
+      vid.pause();
+    }
+  }
+
+  //Video Methods (public)
+  /**
+   * initVideos
+   * param activeVideoSel - a JQuery selector for the active video
+   * param hiddenVideoSel - a JQuery selector for the hidden video
+   * param videoSel - a JQuery selector for both videos
+   * initializes the video swapping mechanism on the given elements.
+  **/
+  fv.initVideos = function(activeVideoSel, hiddenVideoSel, videoSel) {
+    activeVideo = $(activeVideoSel);
+    hiddenVideo = $(hiddenVideoSel);
+    
+    var $videos = $(videoSel);
+    $videos.on('ended', swapOnEnded);
+    $videos.on("canplay", pauseHidden);
+  }
+
+}( window.fv = window.fv || {}, jQuery ));
