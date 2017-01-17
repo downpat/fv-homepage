@@ -1,9 +1,7 @@
 (function( fv, $, undefined ) {
   //Video properties (private)
-  var activeVideo = undefined;
-  var hiddenVideo = undefined;
   var nextVid = 1;
-  var bktUrl = "https://s3.us-east-2.amazonaws.com/freeverse-videos/";
+  var bktUrl = "http://dne1cy8cevv0k.cloudfront.net/";
 	var vidSrcs = [
 		bktUrl+"woman-shelf-video-call2.mp4",
 		bktUrl+"fro-woman-beach-call.mp4",
@@ -18,63 +16,75 @@
 		bktUrl+"woman-shelf-video-call.mp4",
 		bktUrl+"rock-sea-call.mp4",
 	];
+  
+  //Video properties (public)
+  fv.videos = [];
 
-  //Video Method (private)
-
-  /**
-   * nextVideo
-   * returns a string for the URL of the next video to play.
-  **/
-  function nextVideo() {
-    nextVid = nextVid >= vidSrcs.length ? 0 : nextVid + 1;
-    return vidSrcs[nextVid];
-  }
+  //Video Methods (public)
   /**
    * swapOnEnded
    * swaps the visible video with the hidden one when
    * the visible video ends.
    *
   **/
-  function swapOnEnded() {
-    activeVideo
-      .addClass('hidden')
-      .attr('src', nextVideo());
-    hiddenVideo
-      .removeClass('hidden')
-      .get(0)
-      .play();
-    var temp = activeVideo;
-    activeVideo = hiddenVideo;
-    hiddenVideo = temp;
-  }
+  fv.onEndedHandler = function(eo) {
+    var activeVideo = eo.target;
+    var hiddenVideo = fv.getOtherVideo(eo.target);
+    fv.hideVideo(activeVideo);
+    fv.playVideo(hiddenVideo);
+  };
+
+  /**
+   * hideVideo
+   * param video - a video element
+   * hides the given video and updates its source
+  **/
+  fv.hideVideo = function(video) {
+    $(video).addClass('hidden').attr('src', fv.nextVideo());
+  };
+
+  /**
+   * playVideo
+   * param video - a video element
+   * makes the given video element visible and starts playing it
+  **/
+  fv.playVideo = function(video) {
+    $(video).removeClass('hidden');
+    video.play();
+  };
+
+  /**
+   * getOtherVideo
+   * param videoElem - one of the two video elements on the page
+   * returns the other video element on the page
+  **/
+  fv.getOtherVideo = function(videoElem) {
+    if($(videoElem).is(fv.videos[0])) {
+      return fv.videos[1];
+    } else {
+      return fv.videos[0];
+    }
+  };
+
+  /**
+   * nextVideo
+   * returns a string for the URL of the next video to play.
+  **/
+  fv.nextVideo = function() {
+    nextVid = nextVid >= vidSrcs.length ? 0 : nextVid + 1;
+    return vidSrcs[nextVid];
+  };
 
   /**
    * pauseHidden
    * checks if a video is hidden and pauses it if it is
   **/
-  function pauseHidden(eventObj) {
-    var vid = eventObj.target;
+  fv.pauseHidden = function(eo) {
+    var vid = eo.target;
     
     if($(vid).hasClass('hidden')) {
       vid.pause();
     }
-  }
-
-  //Video Methods (public)
-  /**
-   * initVideos
-   * param activeVideoSel - a JQuery selector for the active video
-   * param hiddenVideoSel - a JQuery selector for the hidden video
-   * param videoSel - a JQuery selector for both videos
-   * initializes the video swapping mechanism on the given elements.
-  **/
-  fv.initVideos = function(activeVideoSel, hiddenVideoSel, videoSel) {
-    activeVideo = $(activeVideoSel);
-    hiddenVideo = $(hiddenVideoSel);
-    
-    var $videos = $(videoSel);
-    $videos.on('ended', swapOnEnded);
-    $videos.on("canplay", pauseHidden);
-  }
+  };
 
 }( window.fv = window.fv || {}, jQuery ));
