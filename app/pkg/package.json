@@ -12,12 +12,12 @@
   "scripts": {
     "unit-test": "tape tests/unit/*.js",
     "int-test": "tape tests/integration/*.js",
-    "func-test": "tape tests/functional/*.js",
-    "compile-sass": "node compile-sass.js ./sass/*.scss"
+    "func-test": "tape tests/functional/*.js"
   },
   "devDependencies": {
     "tape": "4.6.3",
     "jquery": "3.1.1",
-    "jsdom": "9.9.0"
+    "jsdom": "9.9.0",
+    "request": "2.79.0"
   }
 }

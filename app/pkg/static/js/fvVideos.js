@@ -1,8 +1,10 @@
-(function( fv, $, undefined ) {
+(function( fvVideos, $, undefined ) {
   //Video properties (private)
   var nextVid = 1;
   var bktUrl = "http://dne1cy8cevv0k.cloudfront.net/";
-	var vidSrcs = [
+  
+  //Video properties (public)
+	fvVideos.vidSrcs = [
 		bktUrl+"woman-shelf-video-call2.mp4",
 		bktUrl+"fro-woman-beach-call.mp4",
 		bktUrl+"woman-typing-answering.mp4",
@@ -16,22 +18,20 @@
 		bktUrl+"woman-shelf-video-call.mp4",
 		bktUrl+"rock-sea-call.mp4",
 	];
-  
-  //Video properties (public)
-  fv.videos = [];
+  fvVideos.videos = [];
 
   //Video Methods (public)
   /**
-   * swapOnEnded
+   * onEndedHandler
    * swaps the visible video with the hidden one when
    * the visible video ends.
    *
   **/
-  fv.onEndedHandler = function(eo) {
+  fvVideos.onEndedHandler = function(eo) {
     var activeVideo = eo.target;
-    var hiddenVideo = fv.getOtherVideo(eo.target);
-    fv.hideVideo(activeVideo);
-    fv.playVideo(hiddenVideo);
+    var hiddenVideo = fvVideos.getOtherVideo(eo.target);
+    fvVideos.hideVideo(activeVideo);
+    fvVideos.playVideo(hiddenVideo);
   };
 
   /**
@@ -39,8 +39,8 @@
    * param video - a video element
    * hides the given video and updates its source
   **/
-  fv.hideVideo = function(video) {
-    $(video).addClass('hidden').attr('src', fv.nextVideo());
+  fvVideos.hideVideo = function(video) {
+    $(video).addClass('hidden').attr('src', fvVideos.nextVideo());
   };
 
   /**
@@ -48,7 +48,7 @@
    * param video - a video element
    * makes the given video element visible and starts playing it
   **/
-  fv.playVideo = function(video) {
+  fvVideos.playVideo = function(video) {
     $(video).removeClass('hidden');
     video.play();
   };
@@ -58,11 +58,11 @@
    * param videoElem - one of the two video elements on the page
    * returns the other video element on the page
   **/
-  fv.getOtherVideo = function(videoElem) {
-    if($(videoElem).is(fv.videos[0])) {
-      return fv.videos[1];
+  fvVideos.getOtherVideo = function(videoElem) {
+    if($(videoElem).is(fvVideos.videos[0])) {
+      return fvVideos.videos[1];
     } else {
-      return fv.videos[0];
+      return fvVideos.videos[0];
     }
   };
 
@@ -70,16 +70,16 @@
    * nextVideo
    * returns a string for the URL of the next video to play.
   **/
-  fv.nextVideo = function() {
-    nextVid = nextVid >= vidSrcs.length ? 0 : nextVid + 1;
-    return vidSrcs[nextVid];
+  fvVideos.nextVideo = function() {
+    nextVid = nextVid >= fvVideos.vidSrcs.length - 1 ? 0 : nextVid + 1;
+    return fvVideos.vidSrcs[nextVid];
   };
 
   /**
    * pauseHidden
    * checks if a video is hidden and pauses it if it is
   **/
-  fv.pauseHidden = function(eo) {
+  fvVideos.pauseHidden = function(eo) {
     var vid = eo.target;
     
     if($(vid).hasClass('hidden')) {
@@ -87,4 +87,4 @@
     }
   };
 
-}( window.fv = window.fv || {}, jQuery ));
+}( window.fvVideos = window.fvVideos || {}, jQuery ));

@@ -18,8 +18,8 @@ $(document).ready(function () {
   /**
 	 * Custom video background cycle
    */
-  fv.videos = document.getElementsByTagName('video');
+  fvVideos.videos = document.getElementsByTagName('video');
   var $videos = $('.fv-video');
-  $videos.on('ended', fv.onEndedHandler);
-  $videos.on('canplay', fv.pauseHidden);
+  $videos.on('ended', fvVideos.onEndedHandler);
+  $videos.on('canplay', fvVideos.pauseHidden);
 });
